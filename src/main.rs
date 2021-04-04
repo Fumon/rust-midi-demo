@@ -1,4 +1,3 @@
-
 use std::io::stdin;
 use std::error::Error;
 
@@ -49,11 +48,22 @@ fn read_loop() -> Result<(), Box<dyn Error>> {
         println!("Opening connection");
         let mut ctx = ReceiverContext::new();
         let _conn = midi_in.connect(in_port, "midi test read", move |stamp, message, _| {
-            println!("{}: {:?} (len = {})", stamp, message, message.len());
             // Decode
             let (msg, _) = MidiMsg::from_midi_with_context(&message, &mut ctx).expect("Decoded midi message");
+            
+            
+            let msg_string = match msg {
+                MidiMsg::ChannelVoice {
+                    channel,
+                    msg
+                } => {
+                    Some(format!("{:?} {:?}",channel, msg))
+                }
+                _ => None
+            };
 
-            println!("\t{:?}", msg);
+            // Print
+            println!("{}: {:?} (len = {})\n\t{}", stamp, message, message.len(), msg_string.unwrap_or("No Decode".to_string()));
         }, ())?;
 
 
