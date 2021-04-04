@@ -10,9 +10,8 @@ use dialoguer::{theme::ColorfulTheme, Select};
 fn main() {
     println!("Hello, world!");
     // Launch and handle errors
-    match read_loop() {
-        Ok(_) => (),
-        Err(err) => println!("Error: {}", err)
+    if let Err(err) = read_loop() {
+        println!("Error: {}", err);
     }
 }
 
@@ -63,7 +62,7 @@ fn read_loop() -> Result<(), Box<dyn Error>> {
             };
 
             // Print
-            println!("{}: {:?} (len = {})\n\t{}", stamp, message, message.len(), msg_string.unwrap_or("No Decode".to_string()));
+            println!("{}:\t\t{:?}\t(len = {})|\t{}", stamp, message, message.len(), msg_string.unwrap_or("No Decode".to_string()));
         }, ())?;
 
 
